@@ -35,7 +35,6 @@ namespace Minesweeper.Core
                 throw new InvalidOperationException($"Game status is {GameState}");
 
             var targetCell = _field[y, x];
-
             if (targetCell.IsOpen)
                 return GameState;
 
@@ -56,6 +55,8 @@ namespace Minesweeper.Core
                         if (neighbor.IsMine)
                         {
                             targetCell.MineNeighborsCount++;
+                            
+
                         }
                     }
                 }
@@ -91,7 +92,6 @@ namespace Minesweeper.Core
                 for (var column = 0; column < _field.GetLength(1); column++)
                 {
                     var targetCell = _field[row, column];
-
                     if (!targetCell.IsOpen && GameState == GameState.Active)
                         publicFieldInfo[row, column] = PointState.Close;
                     else if (targetCell.IsMine)

@@ -9,18 +9,27 @@ namespace Minesweeper.GameProcessorTests
     [TestFixture]
     internal class GetCurrentFieldTests
     {
-       [Test]
-       public void GameProcessorTests_GetCurrentFieldTest_ProperlySetMines() {
-
-
-
-            bool[,] field = { {false, false,true,false },
+        private GameProcessor gameProcessor;
+        private bool[,] field;
+        [SetUp]
+        public void SetUp()
+        {
+              field = new bool[,]{ {false, false,false,false },
                               {false,true, false, false},
                               { true, false,false,false}, };
 
-            var gameProcessor = new GameProcessor(field);
+            gameProcessor = new GameProcessor(field);
 
-            var currentField = gameProcessor.GetCurrentField();
+        }
+
+
+
+
+        [Test]
+       public void GameProcessorTests_GetCurrentFieldTest_ProperlySetMines() {
+
+
+            var currentField = gameProcessor.GetCurrentField(); //Initial state of the field
 
 
             for ( var row = 0; row < field.GetLength(0); row++ )
@@ -29,7 +38,8 @@ namespace Minesweeper.GameProcessorTests
                 {
 
                     try { 
-                        gameProcessor.Open(row, col);
+                        gameProcessor.Open(row, col); //start opening all fields
+
                     }
                     catch (Exception e) {
                         
@@ -37,24 +47,74 @@ namespace Minesweeper.GameProcessorTests
                     currentField = gameProcessor.GetCurrentField();
                     var currentPoint = currentField[row, col];
                     
-                    //if (currentPoint == PointState.Mine) currentPoint=PointState.Close; //here each time we find a mine, we change it to close. Uncomment will cause the test to fail.
+                    // if (currentPoint == PointState.Mine) currentPoint=PointState.Close; //here, each time we find a mine, we change it to close. Uncomment will cause the test to fail.
                     Console.Write(currentPoint + "," + field[row, col] + "|");
 
 
                     var actualStatus = (currentPoint != PointState.Mine);
                     var expectedStatus = (field[row, col] == true);
-                    if (actualStatus && expectedStatus)
-                    {
-                        throw new Exception($"Mines Should be set properly from the initial field.\n" +
-                            $"{field[row, col]} was expected, got {currentPoint} ");
-                    }
+                   
+                    Assert.IsTrue(!(actualStatus && expectedStatus), $"Mines Should be set properly from the initial field.\n" +
+                           $"{field[row, col]} was expected, got {currentPoint} ");
                 }
                 Console.WriteLine();
 
             }
         }
 
+        [TestCase(1,0)]
+        [TestCase(3, 2)]
+        public void GameProcessorTests_GetCurrentFieldTest_SameField(int x, int y)
+        {
+            var currentField = gameProcessor.GetCurrentField(); //Initial state of the field.
+           
+            Console.WriteLine(currentField[y, x]);     
+
+            gameProcessor.Open(x, y);            
+            var expectedField = gameProcessor.GetCurrentField();
+            Console.WriteLine(expectedField[y, x]);
+
+            gameProcessor.Open(x, y);//start opening same Point
+            var actualField = gameProcessor.GetCurrentField();
+            //actualField[y, x] = PointState.Close; //this will change the state of the selected point.
+            //In case the GetCurrentField method is not properly getting the states of each point it will cause the test to fail. 
+            Console.WriteLine(actualField[y, x]);
+
+            bool arraysEqual = true;                        
+                                  
+
+            if (expectedField.GetLength(0) == actualField.GetLength(0) &&
+                expectedField.GetLength(1) == actualField.GetLength(1)) //Here we check that the actual remains the same as the expected field
+                    {
+                        // Compare each element of the two arrays
+                        for (int i = 0; i < expectedField.GetLength(0); i++)
+                        {
+                            for (int j = 0; j < expectedField.GetLength(1); j++)
+                            {
+                                if (expectedField[i, j] != actualField[i, j])
+                                {
+                                    arraysEqual = false;
+                                    break;
+                                }
+                            }
+                            if (!arraysEqual)
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        arraysEqual = false;
+                    }
 
 
+
+                    Assert.IsTrue(arraysEqual,"Field should remain the same when clicking already opened points");
+          
+            Console.WriteLine();
+
+            
+        }
+
+ 
     }
 }

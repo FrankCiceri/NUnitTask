@@ -3,10 +3,13 @@ using Minesweeper.Core;
 using Minesweeper.Core.Enums;
 using Minesweeper.Core.Models;
 
-DifficultyLevel difficultyLevel = Printer.ChooseDifficultyLevel();
-GameSettings settings = DifficultyManager.GetGameSettingsByDifficultylevel(difficultyLevel);
+//DifficultyLevel difficultyLevel = Printer.ChooseDifficultyLevel();
+//GameSettings settings = DifficultyManager.GetGameSettingsByDifficultylevel(difficultyLevel);
 
-var field = FieldGenerator.GetRandomField(settings.Width, settings.Height, settings.Mines);
+//var field = FieldGenerator.GetRandomField(settings.Width, settings.Height, settings.Mines);
+var field = new bool[,]{ {true, false,false,false },
+                              {false,true, false, false},
+                              { true, false,false,false}, };
 
 var gameProcessor = new GameProcessor(field);
 
