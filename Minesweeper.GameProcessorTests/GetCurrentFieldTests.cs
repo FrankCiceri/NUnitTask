@@ -23,10 +23,8 @@ namespace Minesweeper.GameProcessorTests
         }
 
 
-
-
         [Test]
-       public void GameProcessorTests_GetCurrentFieldTest_ProperlySetMines() {
+       public void GetCurrentField_ProperlySetMines_True() {
 
 
             var currentField = gameProcessor.GetCurrentField(); //Initial state of the field
@@ -50,7 +48,6 @@ namespace Minesweeper.GameProcessorTests
                     // if (currentPoint == PointState.Mine) currentPoint=PointState.Close; //here, each time we find a mine, we change it to close. Uncomment will cause the test to fail.
                     Console.Write(currentPoint + "," + field[row, col] + "|");
 
-
                     var actualStatus = (currentPoint != PointState.Mine);
                     var expectedStatus = (field[row, col] == true);
                    
@@ -64,7 +61,7 @@ namespace Minesweeper.GameProcessorTests
 
         [TestCase(1,0)]
         [TestCase(3, 2)]
-        public void GameProcessorTests_GetCurrentFieldTest_SameField(int x, int y)
+        public void GetCurrentField_RemainsSameField_true(int x, int y)
         {
             var currentField = gameProcessor.GetCurrentField(); //Initial state of the field.
            
@@ -80,11 +77,10 @@ namespace Minesweeper.GameProcessorTests
             //In case the GetCurrentField method is not properly getting the states of each point it will cause the test to fail. 
             Console.WriteLine(actualField[y, x]);
 
-            bool arraysEqual = true;                        
-                                  
+            bool arraysEqual = true;  
 
             if (expectedField.GetLength(0) == actualField.GetLength(0) &&
-                expectedField.GetLength(1) == actualField.GetLength(1)) //Here we check that the actual remains the same as the expected field
+                expectedField.GetLength(1) == actualField.GetLength(1)) // Here we check that the actual dimesions remains the same as the expected field if by any chance the method does not work properly
                     {
                         // Compare each element of the two arrays
                         for (int i = 0; i < expectedField.GetLength(0); i++)
@@ -106,13 +102,33 @@ namespace Minesweeper.GameProcessorTests
                         arraysEqual = false;
                     }
 
-
-
                     Assert.IsTrue(arraysEqual,"Field should remain the same when clicking already opened points");
           
             Console.WriteLine();
+        }
 
-            
+        [Test]
+        public void GetCurrentField_StartingField_AllClosed() {
+
+           var actualField = gameProcessor.GetCurrentField();
+            bool allClosed = true;
+
+            for (int i = 0; i < actualField.GetLength(0); i++)
+            {
+                for (int j = 0; j < actualField.GetLength(1); j++)
+                {
+                    if (actualField[i, j] != PointState.Close)
+                    {
+                        allClosed = false;
+                        break;
+                    }
+                }
+                if (!allClosed)
+                    break;
+            }
+
+            Assert.IsTrue(allClosed, "Field should remain with all points closed when starting the game");
+
         }
 
  
