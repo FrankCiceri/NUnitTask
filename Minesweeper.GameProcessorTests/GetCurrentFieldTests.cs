@@ -1,11 +1,17 @@
-﻿using Minesweeper.Core;
+﻿using FluentAssertions;
+using Minesweeper.Core;
 using Minesweeper.Core.Enums;
-using Minesweeper.Core.Models;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
+using System.Linq;
+using FluentAssertions;
+
+
 
 namespace Minesweeper.GameProcessorTests
+
 {
+   
+
     [TestFixture]
     internal class GetCurrentFieldTests
     {
@@ -61,7 +67,7 @@ namespace Minesweeper.GameProcessorTests
 
         [TestCase(1,0)]
         [TestCase(3, 2)]
-        public void GetCurrentField_RemainsSameField_true(int x, int y)
+        public void GetCurrentField_OpeningSamePointRemainsSameField_true(int x, int y)
         {
             var currentField = gameProcessor.GetCurrentField(); //Initial state of the field.
            
@@ -130,7 +136,8 @@ namespace Minesweeper.GameProcessorTests
             Assert.IsTrue(allClosed, "Field should remain with all points closed when starting the game");
 
         }
+                        
 
- 
+
     }
 }
