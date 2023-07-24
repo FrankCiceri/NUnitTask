@@ -138,7 +138,5 @@ namespace Minesweeper.GameProcessorTests
         }
             
         
-
-
     }
 }
