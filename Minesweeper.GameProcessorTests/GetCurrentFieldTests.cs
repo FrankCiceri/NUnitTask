@@ -136,7 +136,8 @@ namespace Minesweeper.GameProcessorTests
             Assert.IsTrue(allClosed, "Field should remain with all points closed when starting the game");
 
         }
-                        
+            
+        
 
 
     }
